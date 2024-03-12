@@ -3,6 +3,7 @@
 <pages core="true" theme="default" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd">
   <header destination="diagnostics.xml">
     <nodel type="hosticon"/>
+    <nodel type="tools"/>
   </header>
   <page title='List'>
     <row>
