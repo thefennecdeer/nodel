@@ -2342,6 +2342,40 @@ var doUpdateCharts = function (rawMeasurements) {
   });
 
   // prepare <select> element
+  var selector = $(".nodel-multiedit-selector");
+  if (!selector || selector.length < 1) {
+    // append element
+    $(".nodel-multiedit").append(
+      '<div class="nodel-multiedit-selector">\
+        <select id="multiedit-selector" multiple data-actions-box="true" data-width="100%" data-size="10" data-header="Select"></select>\
+      </div>'
+    );
+    // populate
+    $("#multiedit-selector").selectpicker();
+
+    // add options (category only)
+    var categorySet = {};
+    rawMeasurements.forEach(function (measurement, i, a) {
+      var parts = getCategoryAnd(measurement);
+      var category = parts[0];
+      
+      if (!categorySet[category]) {
+        categorySet[category] = category;
+        $(".nodel-multiedit-selector select").append('<option value="' + category + '">' + category + "</option>");
+      }
+    });
+    // add callback
+    $(".nodel-multiedit-selector select").on("change", function (e) {
+      // console.info($(this).val()); // []
+      filterSelected = $(this).val();
+      // immediately update measurement
+      $.getJSON("/REST/diagnostics/measurements", function (rawMeasurements) {
+        doUpdateCharts(rawMeasurements);
+      });
+    });
+  }
+
+  // prepare <select> element
   var filter = $(".nodel-charts-filter");
   if (!filter || filter.length < 1) {
     // append element

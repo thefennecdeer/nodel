@@ -4,11 +4,11 @@
   <header destination="nodes.xml">
     <nodel type="hosticon"/>
   </header>
-  <page title='Toolkit'>
+  <page title='Mutli-Edit'>
     <row>
       <column sm="12">
-        <title>Toolkit</title>
-        <nodel type="toolkit"/>
+        <title>Multiple Node Editor</title>
+        <nodel type="multiedit"/>
       </column>
     </row>
   </page>
