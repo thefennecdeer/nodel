@@ -226,27 +226,7 @@
                         <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
                           <ul class="dropdown-menu">
-                            <li class="form">
-                              <div>
-                                <input class="form-control node goto" type="text" placeholder="search nodes"/>
-                              </div>
-                            </li>
-                            <li class="form">
-                              <div>
-                                <div class="btn-group btn-group-justified uipicker">
-                                  <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled="disabled">
-                                      Select UI <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="/toolkit.xml">Toolkit</a></li>
-                            <li><a href="/diagnostics.xml">Diagnostics</a></li>
+                            <li><a href="/multiedit.xml">Multiple Node Editor</a></li>
                           </ul>
                         </li>
                       </ul>
