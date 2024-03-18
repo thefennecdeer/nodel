@@ -134,6 +134,10 @@ module.exports = function(grunt) {
             dest: 'build/grunt/locals.xml'
           },
           {
+            src: 'src/multiedit.xml',
+            dest: 'build/grunt/multiedit.xml'
+          },
+          {
             src: 'src/toolkit.xml',
             dest: 'build/grunt/toolkit.xml'
           },

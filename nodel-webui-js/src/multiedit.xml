@@ -8,7 +8,7 @@
     <row>
       <column sm="12">
         <title>Multiple Node Editor</title>
-        <nodel type="multiedit"/>
+        <nodel type="multieditor"/>
       </column>
     </row>
   </page>

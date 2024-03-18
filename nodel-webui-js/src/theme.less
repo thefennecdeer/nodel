@@ -821,6 +821,56 @@ div.nodel-charts {
     }
   }
 }
+.nodel-multieditor {
+  margin-bottom: @form-group-margin-bottom;
+  .editor {
+    background: @panel-bg;
+    border-radius: @panel-border-radius;
+    border: 1px solid @panel-default-border;
+    padding: 1px;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+    textarea {
+      height: 160px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+    }
+    &.drop {
+      opacity: 0.4;
+      .CodeMirror-cursors {
+        opacity: 0;
+      }
+    }
+    .CodeMirror {
+      font-family: "Roboto Mono", "Lucida Console", Monaco, monospace;
+      font-size: @font-size-xsmall;
+    }
+  }
+  .flexgrow {
+    margin-right: 5px;
+  }
+  .addgrp {
+    display: inline-block;
+    .dropdown-menu {
+      min-width: 240px;
+      left: -170px;
+      form {
+        margin: @padding-base-vertical @padding-base-horizontal;
+      }
+      fieldset {
+        margin-bottom: 5px;
+      }
+    }
+  }
+  .btn {
+    margin-bottom: 5px;
+    &.scriptsubmit {
+      margin-bottom: 0;
+    }
+  }
+}
 .nodel-add {
   .addgrp {
     display: inline-block;

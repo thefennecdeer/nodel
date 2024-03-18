@@ -454,6 +454,7 @@ $(function() {
         updateLogForm();
         updateCharts();
         initToolkit();
+        initMultiEditor();
         checkHostOnline();
         $('*[data-nav]').first().trigger('click');
         $('.nodelistfilter').trigger('focus');
@@ -499,6 +500,67 @@ var getNodeDetails = function(){
 
 var initEditor = function(){
   $('.nodel-editor textarea').each(function() {
+    var ele = this;
+    var editor = CodeMirror.fromTextArea(this, {
+      lineNumbers: true,
+      matchBrackets: true,
+      autoRefresh: true,
+      tabSize: 2
+    });
+    cmResize(editor, {resizableWidth: false});
+    var counter = 0;
+    editor.on('drop', function(data, e) {
+      var file;
+      var files;
+      // Check if files were dropped
+      files = e.dataTransfer.files;
+      if (files.length > 0) {
+        $(ele).closest('.editor').removeClass('drop');
+        counter = 0;
+        e.preventDefault();
+        e.stopPropagation();
+        file = files[0];
+        var reader = new FileReader();
+        reader.onload = function() {
+          var addgrp = $('.editor').closest('.base').find('.addgrp');
+          $(addgrp).data('filedata',reader.result);
+          $(addgrp).find('.scriptnamval').val(file.name);
+          $(addgrp).find('.dropdown').not('.open').find('> button').dropdown('toggle');
+        }
+        reader.readAsArrayBuffer(file);
+        return false;
+      }
+    });
+    editor.on('dragenter', function(data, e) {
+      if(isFileTransfer(e)){
+        counter++;
+        $(ele).closest('.editor').addClass('drop');
+      }
+    });
+    editor.on('dragleave', function(data, e) {
+      if(isFileTransfer(e)){
+        counter--;
+        if (counter === 0) { 
+          $(ele).closest('.editor').removeClass('drop');
+        }
+      }
+    });
+    editor.setOption("extraKeys", {
+      Tab: function Tab(cm) {
+        return cm.execCommand("indentMore");
+      },
+      "Shift-Tab": function ShiftTab(cm) {
+        return cm.execCommand("indentLess");
+      }
+    });
+    $(this).data('editor', editor);
+    $(ele).closest('.base').find('.picker').data('goto','script.py');
+    fillPicker();
+  });
+};
+
+var initMultiEditor = function(){
+  $('.nodel-multieditor textarea').each(function() {
     var ele = this;
     var editor = CodeMirror.fromTextArea(this, {
       lineNumbers: true,
@@ -1788,7 +1850,7 @@ var setEvents = function(){
       alert('Invalid file name, must end with: ' + allowedtxt.concat(allowedbinary).join(', '), 'danger');
     }
   });
-  $('body').on('keydown', '.nodel-editor', function(e) {
+  $('body').on('keydown', '.nodel-editor, .nodel-multieditor', function(e) {
     if (e.ctrlKey || e.metaKey) {
       if (String.fromCharCode(e.which).toLowerCase() == 's') {
         e.preventDefault();
@@ -1796,10 +1858,10 @@ var setEvents = function(){
       }
     }
   });
-  $('body').on('shown.bs.dropdown', '.nodel-editor .addgrp', function () {
+  $('body').on('shown.bs.dropdown', '.nodel-editor .addgrp, .nodel-multieditor .addgrp', function () {
     $(this).find('.scriptnamval').get(0).focus();
   });
-  $('body').on('hidden.bs.dropdown', '.nodel-editor .addgrp', function () {
+  $('body').on('hidden.bs.dropdown', '.nodel-editor .addgrp, .nodel-multieditor .addgrp', function () {
     $(this).find('.scriptnamval').val(null);
     $(this).data('filedata', null);
   });
@@ -1909,6 +1971,7 @@ var setEvents = function(){
       });
     }
   });
+
   $('body').on('shown.bs.dropdown', '.nodel-add .addgrp', function () {
     var ele = this;
     $(ele).find('.nodeaddsubmit').prop('disabled', true);
@@ -2185,6 +2248,31 @@ var callAction = function(action, arg) {
 };
 
 var fillPicker = function() {
+  // fill editor file list
+  var pickers = $('.nodel-editor select.picker');
+  $.each(pickers, function(i,picker) {
+    $(picker).empty();
+    $(picker).append('<option value="" selected disabled hidden></option>');
+    // Relative path : $.getJSON(proto+'//' + host + '/nodes/' + encodeURIComponent(node) + '/REST/files', function (data) {
+    $.getJSON('REST/files', function (data) {
+      data.sort(function(a, b){
+        if (a['path'] == b['path']) return 0;
+        if (a['path'] > b['path']) return 1;
+        else return -1;
+      });
+      $.each(data, function(i, file){
+        if(allowedtxt.concat(allowedbinary).indexOf(file['path'].split('.').pop()) > -1) $(picker).append('<option value="'+file['path']+'">'+file['path']+'</option>');
+      });
+      if((typeof $(picker).data('goto') !== 'undefined') && ($(picker).data('goto') != '')) {
+        $(picker).val($(picker).data('goto'));
+        $(picker).trigger('change');
+        $(picker).data('goto','');
+      }
+    });
+  });
+};
+
+var fillMultiPicker = function() {
   // fill editor file list
   var pickers = $('.nodel-editor select.picker');
   $.each(pickers, function(i,picker) {
