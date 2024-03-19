@@ -616,7 +616,7 @@ var initMultiEditor = function(){
     });
     $(this).data('editor', editor);
     $(ele).closest('.base').find('.picker').data('goto','script.py');
-    fillPicker();
+        
   });
 };
 
@@ -791,10 +791,6 @@ var createDynamicElements = function(){
       d.resolve();
     } else if($(ele).data('nodel') == 'list'){
       $.templates("#listTmpl").link(ele, nodeList);
-      $(ele).find('.base').addClass('bound');
-      d.resolve();
-    } else if($(ele).data('nodel') == 'locals'){
-      $.templates("#localsTmpl").link(ele, localsList);
       $(ele).find('.base').addClass('bound');
       d.resolve();
     } else if($(ele).data('nodel') == 'locals'){
@@ -1639,6 +1635,12 @@ var setEvents = function(){
       $(this).closest('div.autocomplete').siblings('input').prop('value', data.node)
       $(this).closest('div.autocomplete').siblings('input').prop('nodeURL', data.address)
     }
+    else if($(this).closest('div.autocomplete').siblings('input').hasClass('multinodenameval')){
+      var data = $(this).data();
+      $(this).closest('div.autocomplete').siblings('input').prop('value', data.node)
+      $(this).closest('div.autocomplete').siblings('input').prop('nodeURL', data.address)
+      fillMultiPicker()
+    }
     else {
       var data = $.view(this).data;
       var fld = $(this).closest('div.autocomplete').siblings('input').data('link');
@@ -1707,6 +1709,62 @@ var setEvents = function(){
     if(editor) {
       editor.setOption('readOnly', 'nocursor');
       var path = $(ele).find('.picker').val();
+      $(ele).find('textarea').data('path', path);
+      // Relative path : $.get(proto+'//' + host + '/nodes/' + encodeURIComponent(node) + '/REST/files/contents?path=' +encodeURIComponent(path), function (data) {
+      $.get('REST/files/contents?path=' +encodeURIComponent(path), function (data) {
+        switch(path.split('.').pop()){
+          //'sh'
+          case 'js':
+          case 'json':
+            editor.setOption("mode", "javascript");
+            break;
+          case 'xml':
+          case 'xsl':
+          case 'html':
+          case 'htm':
+            editor.setOption("mode", "xml");
+            break;
+          case 'css':
+            editor.setOption("mode", "css");
+            break;
+          case 'java':
+            editor.setOption("mode", "clike");
+            break;
+          case 'groovy':
+            editor.setOption("mode", "groovy");
+            break;
+          case 'sql':
+            editor.setOption("mode", "sql");
+            break;
+          case 'sh':
+            editor.setOption("mode", "shell");
+            break;
+          case 'py':
+            editor.setOption("mode", "python");
+            break;
+          default:
+            editor.setOption("mode", "txt");
+        }
+        if(allowedtxt.indexOf(path.split('.').pop()) > -1) {
+          editor.getDoc().setValue(data);
+          editor.setOption('readOnly', false);
+          $(ele).find('.script_save, .script_delete').prop("disabled", false);
+        } else if(allowedbinary.indexOf(path.split('.').pop()) > -1) {
+          editor.getDoc().setValue('binary file');
+          $(ele).find('.script_delete').prop("disabled", false);
+        }
+      }, 'text' /* to get plain text instead of object */ ).fail(function(e){
+        alert("Error loading file: "+path, "danger", 7000, e.responseText);
+      });
+    }
+  });
+  $('body').on('change', '.multipicker', function() {
+    var ele = $(this).closest('.base');
+    $(ele).find('.script_save, .script_delete').prop("disabled", true);
+    var editor = $(ele).find('textarea').data('editor');
+    if(editor) {
+      editor.setOption('readOnly', 'nocursor');
+      var path = $(ele).find('.multipicker').val();
       $(ele).find('textarea').data('path', path);
       // Relative path : $.get(proto+'//' + host + '/nodes/' + encodeURIComponent(node) + '/REST/files/contents?path=' +encodeURIComponent(path), function (data) {
       $.get('REST/files/contents?path=' +encodeURIComponent(path), function (data) {
@@ -2274,12 +2332,14 @@ var fillPicker = function() {
 
 var fillMultiPicker = function() {
   // fill editor file list
-  var pickers = $('.nodel-editor select.picker');
+  var pickers = $('.nodel-multieditor select.picker');
+  var nodeurl = $('#multinodenameval_').prop("nodeURL")
+  console.log(nodeurl)
   $.each(pickers, function(i,picker) {
     $(picker).empty();
     $(picker).append('<option value="" selected disabled hidden></option>');
     // Relative path : $.getJSON(proto+'//' + host + '/nodes/' + encodeURIComponent(node) + '/REST/files', function (data) {
-    $.getJSON('REST/files', function (data) {
+    $.getJSON(nodeurl + 'REST/files', function (data) {
       data.sort(function(a, b){
         if (a['path'] == b['path']) return 0;
         if (a['path'] > b['path']) return 1;
@@ -2428,40 +2488,6 @@ var doUpdateCharts = function (rawMeasurements) {
   rawMeasurements.sort(function (x, y) {
     return x.name.localeCompare(y.name);
   });
-
-  // prepare <select> element
-  var selector = $(".nodel-multiedit-selector");
-  if (!selector || selector.length < 1) {
-    // append element
-    $(".nodel-multiedit").append(
-      '<div class="nodel-multiedit-selector">\
-        <select id="multiedit-selector" multiple data-actions-box="true" data-width="100%" data-size="10" data-header="Select"></select>\
-      </div>'
-    );
-    // populate
-    $("#multiedit-selector").selectpicker();
-
-    // add options (category only)
-    var categorySet = {};
-    rawMeasurements.forEach(function (measurement, i, a) {
-      var parts = getCategoryAnd(measurement);
-      var category = parts[0];
-      
-      if (!categorySet[category]) {
-        categorySet[category] = category;
-        $(".nodel-multiedit-selector select").append('<option value="' + category + '">' + category + "</option>");
-      }
-    });
-    // add callback
-    $(".nodel-multiedit-selector select").on("change", function (e) {
-      // console.info($(this).val()); // []
-      filterSelected = $(this).val();
-      // immediately update measurement
-      $.getJSON("/REST/diagnostics/measurements", function (rawMeasurements) {
-        doUpdateCharts(rawMeasurements);
-      });
-    });
-  }
 
   // prepare <select> element
   var filter = $(".nodel-charts-filter");

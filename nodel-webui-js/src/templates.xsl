@@ -1733,27 +1733,27 @@
             <xsl:value-of select="generate-id(.)"/>
           </xsl:attribute>
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-8">
               <div class="flex">
-                <div class="flexgrow">
-                  <select class="picker form-control"></select>
-                </div>
                 <div class="flexgrow">
                   <fieldset>
                     <div>
-                      <input class="form-control node existnodenamval" type="text" placeholder="search nodes" data-link="node">
+                      <input class="form-control node multinodenameval" type="text" placeholder="search nodes" data-link="multinodeprimary">
                         <xsl:attribute name="id">
-                          <xsl:text>multinodenamval_</xsl:text>
+                          <xsl:text>multinodenameval_</xsl:text>
                         </xsl:attribute>
                       </input>
                     </div>
                   </fieldset>
                 </div>
+                <div class="flexgrow">
+                  <select class="picker form-control"></select>
+                </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-8">
               <div class="editor">
                 <textarea></textarea>
               </div>
