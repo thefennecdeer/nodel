@@ -6,9 +6,12 @@
   </header>
   <page title='Mutli-Edit'>
     <row>
-      <column sm="12">
-        <title>Multiple Node Editor</title>
+      <title>Multiple Node Editor</title>
+      <column sm="8">
         <nodel type="multieditor"/>
+      </column>
+      <column sm="3">
+        <nodel type="multieditorselect"/>
       </column>
     </row>
   </page>

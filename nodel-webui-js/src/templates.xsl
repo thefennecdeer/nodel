@@ -1538,7 +1538,7 @@
   <!-- group -->
   <!-- nodel -->
   <xsl:template match="nodel">
-    <xsl:if test="@type='description' or @type='actsig' or @type='log' or @type='serverlog' or @type='charts' or @type='multiedit' or @type='console' or @type='params' or @type='remote' or @type='list' or @type='locals' or @type='diagnostics'">
+    <xsl:if test="@type='description' or @type='actsig' or @type='log' or @type='serverlog' or @type='charts' or @type='multiedit' or @type='console' or @type='params' or @type='remote' or @type='list' or @type='locals' or  @type='multieditorselect' or @type='diagnostics'">
       <div data-nodel="{@type}" class="nodel-{@type}"></div>
     </xsl:if>
     <xsl:if test="@type='add'">
@@ -1727,13 +1727,12 @@
     <xsl:if test="@type='multieditor'">
       <div data-nodel="{@type}" class="nodel-{@type}">
         <div class="base">
-        
           <xsl:attribute name="id">
             <xsl:text>editgrp_</xsl:text>
             <xsl:value-of select="generate-id(.)"/>
           </xsl:attribute>
           <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-12">
               <div class="multiflex">
                 <div class="flexgrow">
                   <fieldset>
@@ -1753,14 +1752,16 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-12">
               <div class="editor">
                 <textarea></textarea>
               </div>
             </div>
           </div>
           <div class="row">
-            <button class="btn btn-success multiscript_save" disabled="disabled">Save</button>
+            <div class="col-sm-12">
+              <button class="btn btn-success multiscript_save" disabled="disabled">Save</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1778,6 +1779,6 @@
         </div>
       </div>
     </xsl:if>
-  </xsl:template>
+    </xsl:template>
   <!-- nodel -->
 </xsl:stylesheet>

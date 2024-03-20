@@ -793,6 +793,10 @@ var createDynamicElements = function(){
       $.templates("#listTmpl").link(ele, nodeList);
       $(ele).find('.base').addClass('bound');
       d.resolve();
+    } else if($(ele).data('nodel') == 'multieditorselect'){
+      $.templates("#multinodeTmpl").link(ele, nodeList);
+      $(ele).find('.base').addClass('bound');
+      d.resolve();
     } else if($(ele).data('nodel') == 'locals'){
       $.templates("#localsTmpl").link(ele, localsList);
       $(ele).find('.base').addClass('bound');
