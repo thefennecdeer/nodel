@@ -939,10 +939,8 @@
                      <div class="col-sm-12">
                       <fieldset>
                         <div>
-                          <input class="form-control node selnodesnameval" type="text" placeholder="search nodes" data-link="selnodesnameprimary">
-                            <xsl:attribute name="id">
-                              <xsl:text>selnodesnameval_</xsl:text>
-                            </xsl:attribute>
+                          <input class="form-control node selnodesnameval" id="selnodesnameval_" type="text" placeholder="search nodes" data-link="selnodesnameprimary">
+                            
                           </input>
                         </div>
                       </fieldset>
