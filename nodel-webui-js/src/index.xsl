@@ -939,9 +939,7 @@
                      <div class="col-sm-12">
                       <fieldset>
                         <div>
-                          <input class="form-control node selnodesnameval" id="selnodesnameval_" type="text" placeholder="search nodes" data-link="selnodesnameprimary">
-                            
-                          </input>
+                          <input class="form-control node selnodesnameval" id="selnodesnameval_" type="text" placeholder="search nodes" data-link="selnodesnameprimary" />
                         </div>
                       </fieldset>
                      </div>
@@ -949,10 +947,6 @@
                  </div>
                </div>
              </div>
-
-            
-
-
           </div>
         ]]>
         </script>        
