@@ -616,7 +616,7 @@ var initMultiEditor = function(){
     });
     $(this).data('editor', editor);
     $(ele).closest('.base').find('.picker').data('goto','script.py');
-        
+    fillMultiPicker('')   
   });
 };
 
@@ -1636,11 +1636,22 @@ var setEvents = function(){
       $(this).closest('div.autocomplete').siblings('input').prop('nodeURL', data.address)
     }
     else if($(this).closest('div.autocomplete').siblings('input').hasClass('multinodenameval')){
-      var data = $(this).data();
-      $(this).closest('div.autocomplete').siblings('input').prop('value', data.node)
-      $(this).closest('div.autocomplete').siblings('input').prop('nodeURL', data.address)
-      fillMultiPicker()
-    }
+      var inputDiv = $(this).closest('div.autocomplete').siblings('input')
+      if(typeof inputDiv.prop('nodeURL') !== 'undefined' && inputDiv.prop('nodeURL') !== false){
+        if (confirm("Are you sure you want to change node? Unsaved changes WILL be lost!")){
+          var data = $(this).data();
+          inputDiv.prop('value', data.node)
+          inputDiv.prop('nodeURL', data.address)
+          fillMultiPicker(data.address)
+        }
+      }
+      // THIS IS UGLY!!!!!!!! 
+      else { 
+        var data = $(this).data();
+        inputDiv.prop('value', data.node)
+        inputDiv.prop('nodeURL', data.address)
+        fillMultiPicker(data.address)
+    }}
     else {
       var data = $.view(this).data;
       var fld = $(this).closest('div.autocomplete').siblings('input').data('link');
@@ -1762,12 +1773,13 @@ var setEvents = function(){
     var ele = $(this).closest('.base');
     $(ele).find('.script_save, .script_delete').prop("disabled", true);
     var editor = $(ele).find('textarea').data('editor');
+    var nodeurl = $('#multinodenameval_').prop("nodeURL")
     if(editor) {
       editor.setOption('readOnly', 'nocursor');
       var path = $(ele).find('.multipicker').val();
       $(ele).find('textarea').data('path', path);
       // Relative path : $.get(proto+'//' + host + '/nodes/' + encodeURIComponent(node) + '/REST/files/contents?path=' +encodeURIComponent(path), function (data) {
-      $.get('REST/files/contents?path=' +encodeURIComponent(path), function (data) {
+      $.get(nodeurl + 'REST/files/contents?path=' +encodeURIComponent(path), function (data) {
         switch(path.split('.').pop()){
           //'sh'
           case 'js':
@@ -2330,31 +2342,40 @@ var fillPicker = function() {
   });
 };
 
-var fillMultiPicker = function() {
+var fillMultiPicker = function(nodeURL) {
   // fill editor file list
-  var pickers = $('.nodel-multieditor select.picker');
-  var nodeurl = $('#multinodenameval_').prop("nodeURL")
-  console.log(nodeurl)
-  $.each(pickers, function(i,picker) {
-    $(picker).empty();
-    $(picker).append('<option value="" selected disabled hidden></option>');
-    // Relative path : $.getJSON(proto+'//' + host + '/nodes/' + encodeURIComponent(node) + '/REST/files', function (data) {
-    $.getJSON(nodeurl + 'REST/files', function (data) {
-      data.sort(function(a, b){
-        if (a['path'] == b['path']) return 0;
-        if (a['path'] > b['path']) return 1;
-        else return -1;
+  var pickers = $('.nodel-multieditor select.multipicker');
+  console.log(nodeURL)
+  if(nodeURL == ''){
+    $.each(pickers, function(i,picker) {
+      $(picker).prop("disabled", "disabled");
+      $(picker).append('<option value="" selected disabled hidden>No Files Loaded</option>');
+    })
+  }
+  else{
+    $.each(pickers, function(i,picker) {
+      $(picker).prop("disabled", false);
+      $(picker).empty();
+      $(picker).append('<option value="" selected disabled hidden></option>');
+      // Relative path : $.getJSON(proto+'//' + host + '/nodes/' + encodeURIComponent(node) + '/REST/files', function (data) {
+      $.getJSON(nodeURL + 'REST/files', function (data) {
+        data.sort(function(a, b){
+          if (a['path'] == b['path']) return 0;
+          if (a['path'] > b['path']) return 1;
+          else return -1;
+        });
+        $.each(data, function(i, file){
+          if(allowedtxt.concat(allowedbinary).indexOf(file['path'].split('.').pop()) > -1) $(picker).append('<option value="'+file['path']+'">'+file['path']+'</option>');
+        });
+        $(picker).data('goto','script.py');
+        if((typeof $(picker).data('goto') !== 'undefined') && ($(picker).data('goto') != '')) {
+          $(picker).val($(picker).data('goto'));
+          $(picker).trigger('change');
+          $(picker).data('goto','');
+        }
       });
-      $.each(data, function(i, file){
-        if(allowedtxt.concat(allowedbinary).indexOf(file['path'].split('.').pop()) > -1) $(picker).append('<option value="'+file['path']+'">'+file['path']+'</option>');
-      });
-      if((typeof $(picker).data('goto') !== 'undefined') && ($(picker).data('goto') != '')) {
-        $(picker).val($(picker).data('goto'));
-        $(picker).trigger('change');
-        $(picker).data('goto','');
-      }
     });
-  });
+  }
 };
 
 var fillUIPicker = function() {

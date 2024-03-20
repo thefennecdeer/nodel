@@ -847,9 +847,7 @@ div.nodel-charts {
       font-size: @font-size-xsmall;
     }
   }
-  .flexgrow {
-    margin-right: 5px;
-  }
+  
   .addgrp {
     display: inline-block;
     .dropdown-menu {
@@ -864,7 +862,7 @@ div.nodel-charts {
     }
   }
   .btn {
-    margin-bottom: 5px;
+    float: right;
     &.scriptsubmit {
       margin-bottom: 0;
     }
@@ -963,6 +961,14 @@ div.nodel-charts {
   display: flex;
   .flexgrow {
     flex-grow: 1;
+  }
+}
+.multiflex {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5em;
+  .flexgrow {
+    flex: 1;
   }
 }
 .list-group-basic {

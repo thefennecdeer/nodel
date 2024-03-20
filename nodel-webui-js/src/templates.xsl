@@ -1734,7 +1734,7 @@
           </xsl:attribute>
           <div class="row">
             <div class="col-sm-8">
-              <div class="flex">
+              <div class="multiflex">
                 <div class="flexgrow">
                   <fieldset>
                     <div>
@@ -1747,7 +1747,7 @@
                   </fieldset>
                 </div>
                 <div class="flexgrow">
-                  <select class="picker form-control"></select>
+                  <select class="multipicker form-control"></select>
                 </div>
               </div>
             </div>
@@ -1759,7 +1759,9 @@
               </div>
             </div>
           </div>
-
+          <div class="row">
+            <button class="btn btn-success multiscript_save" disabled="disabled">Save</button>
+          </div>
         </div>
       </div>
     </xsl:if>
