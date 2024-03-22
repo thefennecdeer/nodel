@@ -794,7 +794,7 @@ var createDynamicElements = function(){
       $(ele).find('.base').addClass('bound');
       d.resolve();
     } else if($(ele).data('nodel') == 'multieditorselect'){
-      $.templates("#multinodeTmpl").link(ele, nodeList);
+      $.templates("#multinodeTmpl").link(ele, multinodeList);
       $(ele).find('.base').addClass('bound');
       d.resolve();
     } else if($(ele).data('nodel') == 'locals'){
@@ -1657,7 +1657,8 @@ var setEvents = function(){
         fillMultiPicker(data.address)
     }}
     else if($(this).closest('div.autocomplete').siblings('input').hasClass('selnodesnameval')){
-        
+      var data = $(this).data();
+      console.log(data)
     }
     else {
       var data = $.view(this).data;
