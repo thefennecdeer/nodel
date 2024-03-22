@@ -392,7 +392,7 @@ var nodeList = {'lst':[], 'flt':'', 'end':20, 'hosts':{}};
 var nodeListreq = null;
 var localsList = {'lst':[], 'flt':'', 'end':20, 'hosts':{}};
 var localsListreq = null;
-
+var multinodeList = {'lst':[], 'hosts':{}};
 var t0;
 
 $(function() {
@@ -1656,6 +1656,9 @@ var setEvents = function(){
         inputDiv.prop('nodeURL', data.address)
         fillMultiPicker(data.address)
     }}
+    else if($(this).closest('div.autocomplete').siblings('input').hasClass('selnodesnameval')){
+        
+    }
     else {
       var data = $.view(this).data;
       var fld = $(this).closest('div.autocomplete').siblings('input').data('link');

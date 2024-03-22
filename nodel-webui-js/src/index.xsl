@@ -909,28 +909,10 @@
                    <div class="row">
                      <div class="col-sm-12">
                        <div class="flex">
-                        <form class="form-inline">
-                          <fieldset>
-                            <div class="form-group">
-                              <input class="form-control nodelistfilter" type="text" data-link="flt" placeholder="filter"/>
-                              <select class="form-control nodelistshow" data-link="end">
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="99999">All</option>
-                              </select>
-                            </div>
-                            <p class="lsttotal">total: {^{>lst.length}}</p>
-                          </fieldset>
-                        </form>
                         <div class="list-group list-group-basic">
                           {^{for lst sort='node' end=end sorted=~flst}}
                             <a class="list-group-item" data-link="href{:address} class{:~root^hosts[~encodr(host)].reachable ? 'list-group-item' : 'list-group-item unreachable'}"><img src="data:image/svg+xml;base64,{{:~root^hosts[~encodr(host)].icon}}"/>&nbsp;{^{:~highlight(name,~root.flt)}}</a>
                           {{/for}}
-                          {^{if (~flst) && (end <= ~flst.length)}}
-                            <a class="list-group-item listmore">more</a>
-                          {{/if}}
                         </div>
                        </div>
                      </div>
@@ -938,8 +920,9 @@
                    <div class="row">
                      <div class="col-sm-12">
                       <fieldset>
-                        <div>
+                        <div class="flex">
                           <input class="form-control node selnodesnameval" id="selnodesnameval_" type="text" placeholder="search nodes" data-link="selnodesnameprimary" />
+                          <button class="btn btn-success selnodes_add">Add Node</button>
                         </div>
                       </fieldset>
                      </div>
